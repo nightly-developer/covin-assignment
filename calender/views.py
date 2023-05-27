@@ -45,5 +45,14 @@ class GoogleCalendarRedirectView(View):
             headers = {'Authorization': f'Bearer {access_token}'}
             events_response = requests.get(events_url, headers=headers)
 
+            if events_response.status_code == 200:
+                # Process the calendar events
+                events = events_response.json().get('items')
+
+                # Return the list of events as JSON response
+                return JsonResponse({'events': events})
+            else:
+                return HttpResponse('Failed to fetch calendar events', status=events_response.status_code)
+
         else:
             return HttpResponse('Failed to exchange authorization code for access token', status=response.status_code)
