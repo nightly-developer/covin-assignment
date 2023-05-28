@@ -24,3 +24,9 @@ class GoogleCalendarInitView(View):
         )
         request.session['oauth2_state'] = state
         return HttpResponseRedirect(authorization_url)
+    
+class GoogleCalendarRedirectView(View):
+    def get(self, request):
+        state = request.session.get('oauth2_state')
+        if state is None :#or state != request.GET.get('state'):
+            return HttpResponse('Invalid state parameter', status=400)
